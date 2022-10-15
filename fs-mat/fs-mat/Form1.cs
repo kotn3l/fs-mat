@@ -212,10 +212,5 @@ namespace fs_mat
                 }
             }
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }
