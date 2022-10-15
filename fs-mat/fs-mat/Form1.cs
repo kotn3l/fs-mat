@@ -36,7 +36,7 @@ namespace fs_mat
 
         }
 
-        private async void preSetUp()
+        private async void preSetUp(string s = "")
         {
             try
             {
@@ -50,7 +50,13 @@ namespace fs_mat
                     progressBar1.Value = v;
                 });
                 //Task t1 = new Task(() => setUp(progress));
+                setControls(false);
                 await Task.Run(() => setUp(progress));
+                if (s != "")
+                {
+                    MessageBox.Show(s);
+                }
+                setControls(true);
                 cb_Shaders.Items.AddRange(shaders.ToArray());
                 cB_matCategory.Items.AddRange(matByCategory.Keys.ToArray());
                 cB_matCategory.SelectedIndex = 0;
@@ -277,11 +283,9 @@ namespace fs_mat
             {
                 progressBar1.Value = v;
             });
-            dGV_Params.Enabled = false;
-            dGV_Params.Enabled = false;
+            setControls(false);
             await Task.Run(() => SaveMaterial(progress));
-            dGV_Params.Enabled = true;
-            dGV_Params.Enabled = true;
+            setControls(true);
             System.GC.Collect();
             MessageBox.Show("Saved!");
             progressBar1.Value = 0;
@@ -332,8 +336,7 @@ namespace fs_mat
                     File.Move(matbinFile, matbinFile + "1");
                     File.Copy(matbinFile + @".backup", matbinFile);
                     File.Delete(matbinFile + "1");
-                    preSetUp();
-                    MessageBox.Show("Backup Restored!");
+                    preSetUp("Backup Restored!");
                 }
             }
             else
@@ -376,7 +379,17 @@ namespace fs_mat
             cB_allmat.Items.Clear();
             cB_matCategory.Items.Clear();
         }
-
+        private void setControls(bool enabled)
+        {
+            dGV_Params.Enabled = enabled;
+            dGV_Params.Enabled = enabled;
+            cb_Shaders.Enabled = enabled;
+            cB_allmat.Enabled = enabled;
+            cB_matCategory.Enabled = enabled;
+            b_ResetMat.Enabled = enabled;
+            b_saveShader.Enabled = enabled;
+            fileMenu.Enabled = enabled;
+        }
         private void b_saveShader_Click(object sender, EventArgs e)
         {
             currentMat.ShaderPath = shaders[cb_Shaders.SelectedIndex];

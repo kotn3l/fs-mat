@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cB_allmat = new System.Windows.Forms.ComboBox();
             this.cB_matCategory = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -108,8 +108,8 @@
             this.dGV_Params.AllowUserToAddRows = false;
             this.dGV_Params.AllowUserToDeleteRows = false;
             this.dGV_Params.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.dGV_Params.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.dGV_Params.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dGV_Params.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV_Params.Location = new System.Drawing.Point(6, 6);
             this.dGV_Params.MultiSelect = false;
@@ -138,8 +138,8 @@
             this.dGV_Samplers.AllowUserToAddRows = false;
             this.dGV_Samplers.AllowUserToDeleteRows = false;
             this.dGV_Samplers.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.dGV_Samplers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.dGV_Samplers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dGV_Samplers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV_Samplers.Location = new System.Drawing.Point(6, 6);
             this.dGV_Samplers.MultiSelect = false;
@@ -195,8 +195,8 @@
             // loadmatbinToolStripMenuItem
             // 
             this.loadmatbinToolStripMenuItem.Name = "loadmatbinToolStripMenuItem";
-            this.loadmatbinToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.loadmatbinToolStripMenuItem.Text = "Load allmaterial.matbinbnd.dcx...";
+            this.loadmatbinToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadmatbinToolStripMenuItem.Text = "Load allmaterial";
             this.loadmatbinToolStripMenuItem.Click += new System.EventHandler(this.loadmatbinToolStripMenuItem_Click);
             // 
             // restoreFromBackupFileToolStripMenuItem
@@ -205,7 +205,7 @@
             this.fromDefaultLocationToolStripMenuItem,
             this.browseToolStripMenuItem1});
             this.restoreFromBackupFileToolStripMenuItem.Name = "restoreFromBackupFileToolStripMenuItem";
-            this.restoreFromBackupFileToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.restoreFromBackupFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.restoreFromBackupFileToolStripMenuItem.Text = "Restore backup file";
             // 
             // fromDefaultLocationToolStripMenuItem
@@ -228,7 +228,7 @@
             this.withDefaultFilenamelocationToolStripMenuItem,
             this.browseToolStripMenuItem});
             this.createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            this.createBackupToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.createBackupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createBackupToolStripMenuItem.Text = "Create backup";
             // 
             // withDefaultFilenamelocationToolStripMenuItem
