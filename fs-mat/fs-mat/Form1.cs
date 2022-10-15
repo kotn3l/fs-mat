@@ -1,4 +1,5 @@
 using SoulsFormats;
+using System.ComponentModel;
 using static SoulsFormats.MATBIN;
 
 namespace fs_mat
@@ -16,8 +17,8 @@ namespace fs_mat
         public Form1()
         {
             InitializeComponent();
-            label1.Text = "";
             matByCategory = new Dictionary<string, List<string>>();
+            label1.Text = "";
             if (config.Default.lastMATBINFile != "" || config.Default.lastMATBINFile != String.Empty || File.Exists(config.Default.lastMATBINFile))
             {
                 matbinFile = config.Default.lastMATBINFile;
@@ -166,14 +167,33 @@ namespace fs_mat
             }
         }
 
-        private void b_Save_Click(object sender, EventArgs e)
+        private void DoWork(IProgress<int> progress)
         {
+            progress.Report(20);
             allmat.Files[currentMatIndex].Bytes = currentMat.Write();
+            progress.Report(40);
             allmat.Write(matbinFile + "0");
+            progress.Report(70);
             File.Delete(matbinFile);
+            progress.Report(90);
             File.Move(matbinFile + "0", matbinFile);
-            System.GC.Collect();
+            progress.Report(100);
+        }
 
+        private async void b_Save_Click(object sender, EventArgs e)
+        {
+            progressBar1.Maximum = 100;
+            progressBar1.Step = 10;
+            var progress = new Progress<int>(v =>
+            {
+                progressBar1.Value = v;
+            });
+            dGV_Params.Enabled = false;
+            await Task.Run(() => DoWork(progress));
+            dGV_Params.Enabled = true;
+            System.GC.Collect();
+            MessageBox.Show("Saved!");
+            progressBar1.Value = 0;
         }
 
         private void loadmatbinToolStripMenuItem_Click(object sender, EventArgs e)
@@ -191,6 +211,11 @@ namespace fs_mat
                     setUp();
                 }
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

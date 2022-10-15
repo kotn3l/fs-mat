@@ -19,8 +19,7 @@ namespace fs_mat
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterParent;
-            this.Text = Form1.multiParamName;
-            label1.Text = Form1.currentMat.Params[Form1.selectedRowParam].Type.ToString();
+            this.Text = Form1.currentMat.Params[Form1.selectedRowParam].Type.ToString() + " | " +Form1.multiParamName;
             loadData();
         }
 
