@@ -62,7 +62,7 @@ namespace fs_mat
 
         private void cB_allmat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            currentMatIndex = allmat.Files.IndexOf(allmat.Files.Where(x => x.Name.Contains(cB_allmat.SelectedItem.ToString())).First());
+            currentMatIndex = allmat.Files.IndexOf(allmat.Files.First(x => x.Name.Contains(cB_allmat.SelectedItem.ToString())));
             label1.Text = allmat.Files[currentMatIndex].Name;
             currentMat = MATBIN.Read(allmat.Files[currentMatIndex].Bytes);
             currentMatBackup = MATBIN.Read(allmat.Files[currentMatIndex].Bytes);
@@ -160,6 +160,7 @@ namespace fs_mat
                         multiParamName = test.Name;
                         selectedRowParam = dGV_Params.CurrentCell.RowIndex;
                         MultipleDataEditForm mdef = new MultipleDataEditForm();
+                        mdef.ShowDialog();
                         break;
                 }
             }
