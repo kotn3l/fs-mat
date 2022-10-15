@@ -1,5 +1,6 @@
 using SoulsFormats;
 using System.ComponentModel;
+using System.Numerics;
 using static SoulsFormats.MATBIN;
 
 namespace fs_mat
@@ -30,10 +31,6 @@ namespace fs_mat
         private void setUp()
         {
             allmat = BND4.Read(matbinFile);
-            if (!File.Exists(matbinFile + @".backup"))
-            {
-                File.Copy(matbinFile, matbinFile + @".backup");
-            }
             matByCategory.Clear();
             cB_matCategory.Items.Clear();
             cB_allmat.Items.Clear();
@@ -83,6 +80,7 @@ namespace fs_mat
 
             dGV_Samplers.DataSource = currentMat.Samplers;
             dGV_Samplers.Columns["Key"].ReadOnly = true;
+            dGV_Samplers.Columns["Type"].ReadOnly = true;
             dGV_Samplers.Columns["Path"].Width = 325;
             dGV_Samplers.Columns["Type"].Width = 325;
             dGV_Samplers.Columns["Key"].Width = 35;
@@ -92,7 +90,6 @@ namespace fs_mat
             System.GC.Collect();
 
         }
-
         private void cB_matCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -111,7 +108,6 @@ namespace fs_mat
                 
             }
         }
-
         private void dGV_Params_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MATBIN.Param test = dGV_Params.SelectedRows[0].DataBoundItem as MATBIN.Param;
@@ -166,8 +162,23 @@ namespace fs_mat
                 }
             }
         }
-
-        private void DoWork(IProgress<int> progress)
+        private void dGV_Samplers_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            MATBIN.Sampler test = dGV_Samplers.SelectedRows[0].DataBoundItem as MATBIN.Sampler;
+            currentMat.Samplers[dGV_Params.CurrentCell.RowIndex] = test;
+        }
+        private void dGV_Samplers_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dGV_Samplers.CurrentCellAddress.X == 3)
+            {
+                MATBIN.Sampler test = dGV_Samplers.SelectedRows[0].DataBoundItem as MATBIN.Sampler;
+                multiParamName = test.Type;
+                selectedRowParam = dGV_Samplers.CurrentCell.RowIndex;
+                MultipleDataEditForm mdef = new MultipleDataEditForm(false);
+                mdef.ShowDialog();
+            }
+        }
+        private void SaveMaterial(IProgress<int> progress)
         {
             progress.Report(20);
             allmat.Files[currentMatIndex].Bytes = currentMat.Write();
@@ -179,7 +190,6 @@ namespace fs_mat
             File.Move(matbinFile + "0", matbinFile);
             progress.Report(100);
         }
-
         private async void b_Save_Click(object sender, EventArgs e)
         {
             progressBar1.Maximum = 100;
@@ -189,13 +199,14 @@ namespace fs_mat
                 progressBar1.Value = v;
             });
             dGV_Params.Enabled = false;
-            await Task.Run(() => DoWork(progress));
+            dGV_Params.Enabled = false;
+            await Task.Run(() => SaveMaterial(progress));
+            dGV_Params.Enabled = true;
             dGV_Params.Enabled = true;
             System.GC.Collect();
             MessageBox.Show("Saved!");
             progressBar1.Value = 0;
         }
-
         private void loadmatbinToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -208,9 +219,74 @@ namespace fs_mat
                     matbinFile = openFileDialog.FileName;
                     config.Default.lastMATBINFile = matbinFile;
                     config.Default.Save();
+                    if (!File.Exists(matbinFile + @".backup"))
+                    {
+                        File.Copy(matbinFile, matbinFile + @".backup");
+                    }
                     setUp();
                 }
             }
+        }
+        private void b_ResetMat_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"Reset material {cB_allmat.SelectedItem}?", "Reset", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                for (int i = 0; i < currentMat.Params.Count; i++)
+                {
+                    currentMat.Params[i].Value = currentMatBackup.Params[i].Value;
+                }
+                for (int i = 0; i < currentMat.Samplers.Count; i++)
+                {
+                    currentMat.Samplers[i].Path = currentMatBackup.Samplers[i].Path;
+                    currentMat.Samplers[i].Unk14 = currentMatBackup.Samplers[i].Unk14;
+                }
+                MessageBox.Show("Material Reset!");
+            }
+        }
+        private void fromDefaultLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(matbinFile + @".backup"))
+            {
+                if (MessageBox.Show($"This will overwrite the allmaterial file with the default backup file. Continue?", "Restore backup", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    File.Move(matbinFile, matbinFile + "1");
+                    File.Copy(matbinFile + @".backup", matbinFile);
+                    File.Delete(matbinFile + "1");
+                    setUp();
+                    MessageBox.Show("Backup Restored!");
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Backup file doesn't exist at the default location! ({matbinFile + @".backup"})");
+            }
+            
+        }
+        private void withDefaultFilenamelocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(matbinFile + @".backup"))
+            {
+                if (MessageBox.Show($"This will overwrite the backup found at the default location. Continue?", "New backup", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    createBackup();
+                }
+            }
+            else
+            {
+                createBackup();
+            }
+            MessageBox.Show("Backup Created!");
+        }
+
+        private void createBackup()
+        {
+            File.Copy(matbinFile, matbinFile + ".backup0");
+            if (File.Exists(matbinFile + @".backup"))
+            {
+                File.Delete(matbinFile + @".backup");
+            }
+            File.Move(matbinFile + ".backup0", matbinFile + @".backup");
+            File.SetLastWriteTime(matbinFile + @".backup", DateTime.Now);
         }
     }
 }
