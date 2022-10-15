@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Forms;
+
 namespace fs_mat
 {
     internal static class Program
@@ -10,7 +13,9 @@ namespace fs_mat
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
         }
     }

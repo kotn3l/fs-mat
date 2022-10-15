@@ -1,4 +1,6 @@
-﻿namespace fs_mat
+﻿using System.Windows.Forms;
+
+namespace fs_mat
 {
     partial class MultipleDataEditForm
     {
