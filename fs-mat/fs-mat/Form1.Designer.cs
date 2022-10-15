@@ -206,7 +206,7 @@
             this.browseToolStripMenuItem1});
             this.restoreFromBackupFileToolStripMenuItem.Name = "restoreFromBackupFileToolStripMenuItem";
             this.restoreFromBackupFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.restoreFromBackupFileToolStripMenuItem.Text = "Restore backup file";
+            this.restoreFromBackupFileToolStripMenuItem.Text = "Restore backup";
             // 
             // fromDefaultLocationToolStripMenuItem
             // 
