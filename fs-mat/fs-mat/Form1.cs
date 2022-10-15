@@ -5,22 +5,35 @@ namespace fs_mat
 {
     public partial class Form1 : Form
     {
-        private static string ERdir = @"Z:\ER_modengine\mattest";
+        private static string matbinFile = "";
         private static BND4 allmat;
         public static MATBIN currentMat;
         public static MATBIN currentMatBackup;
         public static int currentMatIndex = -1;
         private static Dictionary<string, List<string>> matByCategory;
         public static int selectedRowParam = -1;
+        public static string multiParamName = "";
         public Form1()
         {
             InitializeComponent();
+            label1.Text = "";
             matByCategory = new Dictionary<string, List<string>>();
-            allmat = BND4.Read(ERdir + @"\material\allmaterial.matbinbnd.dcx");
-            if (!File.Exists(ERdir + @"\material\allmaterial.matbinbnd.dcx.backup"))
+            if (config.Default.lastMATBINFile != "" || config.Default.lastMATBINFile != String.Empty || File.Exists(config.Default.lastMATBINFile))
             {
-                File.Copy(ERdir + @"\material\allmaterial.matbinbnd.dcx", ERdir + @"\material\allmaterial.matbinbnd.dcx.backup");
+                matbinFile = config.Default.lastMATBINFile;
+                setUp();
             }
+            
+        }
+
+        private void setUp()
+        {
+            allmat = BND4.Read(matbinFile);
+            if (!File.Exists(matbinFile + @".backup"))
+            {
+                File.Copy(matbinFile, matbinFile + @".backup");
+            }
+            matByCategory.Clear();
             cB_matCategory.Items.Clear();
             cB_allmat.Items.Clear();
             foreach (var mat in allmat.Files)
@@ -34,16 +47,17 @@ namespace fs_mat
                     cB_matCategory.Items.Add(fullname[6]);
                 }
 
-                for (int i = 7; i < fullname.Length-1; i++)
+                for (int i = 7; i < fullname.Length - 1; i++)
                 {
                     final += fullname[i] + "\\";
                 }
-                final += fullname[fullname.Length-1];
+                final += fullname[fullname.Length - 1];
                 matByCategory[fullname[6]].Add(final);
 
                 //cB_allmat.Items.Add(final);
             }
             cB_matCategory.SelectedIndex = 0;
+            System.GC.Collect();
         }
 
         private void cB_allmat_SelectedIndexChanged(object sender, EventArgs e)
@@ -51,8 +65,7 @@ namespace fs_mat
             currentMatIndex = allmat.Files.IndexOf(allmat.Files.Where(x => x.Name.Contains(cB_allmat.SelectedItem.ToString())).First());
             label1.Text = allmat.Files[currentMatIndex].Name;
             currentMat = MATBIN.Read(allmat.Files[currentMatIndex].Bytes);
-            //currentMatBackup = MATBIN.Read(allmat.Files[currentMatIndex].Bytes);
-
+            currentMatBackup = MATBIN.Read(allmat.Files[currentMatIndex].Bytes);
 
             tb_ShaderPath.Text = currentMat.ShaderPath;
             dGV_Params.Columns.Clear();
@@ -101,21 +114,30 @@ namespace fs_mat
         private void dGV_Params_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MATBIN.Param test = dGV_Params.SelectedRows[0].DataBoundItem as MATBIN.Param;
-            switch (test.Type)
+            try
             {
-                case ParamType.Bool:
-                    test.Value = bool.Parse((string)test.Value);
-                    break;
-                case ParamType.Int:
-                    test.Value = int.Parse((string)test.Value);
-                    break;
-                case ParamType.Float:
-                    test.Value = float.Parse((string)test.Value);
-                    break;
-                default:
-                    break;
+                switch (test.Type)
+                {
+                    case ParamType.Bool:
+                        test.Value = bool.Parse((string)test.Value);
+                        break;
+                    case ParamType.Int:
+                        test.Value = int.Parse((string)test.Value);
+                        break;
+                    case ParamType.Float:
+                        test.Value = float.Parse((string)test.Value);
+                        break;
+                    default:
+                        break;
+                }
+                currentMat.Params[dGV_Params.CurrentCell.RowIndex] = test;
             }
-            currentMat.Params[dGV_Params.CurrentCell.RowIndex] = test;
+            catch (Exception)
+            {
+                currentMat.Params[dGV_Params.CurrentCell.RowIndex].Value = currentMatBackup.Params[dGV_Params.CurrentCell.RowIndex].Value;
+                MessageBox.Show("Couldn't modify value! Resetting...");
+            }
+            
             //MessageBox.Show("test");
         }
         private void dGV_Params_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -135,9 +157,9 @@ namespace fs_mat
                     case ParamType.Float4:
                     case ParamType.Float5:
                     case ParamType.Float3:
+                        multiParamName = test.Name;
                         selectedRowParam = dGV_Params.CurrentCell.RowIndex;
                         MultipleDataEditForm mdef = new MultipleDataEditForm();
-                        mdef.ShowDialog();
                         break;
                 }
             }
@@ -146,11 +168,32 @@ namespace fs_mat
         private void b_Save_Click(object sender, EventArgs e)
         {
             allmat.Files[currentMatIndex].Bytes = currentMat.Write();
-            allmat.Write(ERdir + @"\material\allmaterial.matbinbnd.dcx0");
-            File.Delete(ERdir + @"\material\allmaterial.matbinbnd.dcx");
-            File.Move(ERdir + @"\material\allmaterial.matbinbnd.dcx0", ERdir + @"\material\allmaterial.matbinbnd.dcx");
+            allmat.Write(matbinFile + "0");
+            File.Delete(matbinFile);
+            File.Move(matbinFile + "0", matbinFile);
             System.GC.Collect();
 
+        }
+
+        private void loadmatbinToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                //openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "dcx compressed MATBIN (*.dcx)|*.dcx|MATBIN BinderFile (*.matbinbnd)|*.matbinbnd";
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+
+
+                    //Get the path of specified file
+                    matbinFile = openFileDialog.FileName;
+                    config.Default.lastMATBINFile = matbinFile;
+                    config.Default.Save();
+                    setUp();
+                }
+            }
         }
     }
 }

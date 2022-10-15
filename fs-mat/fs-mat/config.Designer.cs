@@ -22,5 +22,17 @@ namespace fs_mat {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastMATBINFile {
+            get {
+                return ((string)(this["lastMATBINFile"]));
+            }
+            set {
+                this["lastMATBINFile"] = value;
+            }
+        }
     }
 }
