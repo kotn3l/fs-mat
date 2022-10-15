@@ -179,15 +179,11 @@ namespace fs_mat
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                //openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "dcx compressed MATBIN (*.dcx)|*.dcx|MATBIN BinderFile (*.matbinbnd)|*.matbinbnd";
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
-
-                    //Get the path of specified file
                     matbinFile = openFileDialog.FileName;
                     config.Default.lastMATBINFile = matbinFile;
                     config.Default.Save();
