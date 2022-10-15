@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cB_allmat = new System.Windows.Forms.ComboBox();
             this.cB_matCategory = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -36,7 +38,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dGV_Samplers = new System.Windows.Forms.DataGridView();
             this.l_shaderPath = new System.Windows.Forms.Label();
-            this.tb_ShaderPath = new System.Windows.Forms.TextBox();
             this.b_Save = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,9 +48,12 @@
             this.createBackupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.withDefaultFilenamelocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.browseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.b_ResetMat = new System.Windows.Forms.Button();
+            this.cb_Shaders = new System.Windows.Forms.ComboBox();
+            this.b_saveShader = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_Params)).BeginInit();
@@ -103,10 +107,14 @@
             // 
             this.dGV_Params.AllowUserToAddRows = false;
             this.dGV_Params.AllowUserToDeleteRows = false;
+            this.dGV_Params.AllowUserToResizeRows = false;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.dGV_Params.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dGV_Params.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV_Params.Location = new System.Drawing.Point(6, 6);
             this.dGV_Params.MultiSelect = false;
             this.dGV_Params.Name = "dGV_Params";
+            this.dGV_Params.RowHeadersVisible = false;
             this.dGV_Params.RowTemplate.Height = 25;
             this.dGV_Params.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dGV_Params.Size = new System.Drawing.Size(796, 424);
@@ -129,10 +137,14 @@
             // 
             this.dGV_Samplers.AllowUserToAddRows = false;
             this.dGV_Samplers.AllowUserToDeleteRows = false;
+            this.dGV_Samplers.AllowUserToResizeRows = false;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.dGV_Samplers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dGV_Samplers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV_Samplers.Location = new System.Drawing.Point(6, 6);
             this.dGV_Samplers.MultiSelect = false;
             this.dGV_Samplers.Name = "dGV_Samplers";
+            this.dGV_Samplers.RowHeadersVisible = false;
             this.dGV_Samplers.RowTemplate.Height = 25;
             this.dGV_Samplers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dGV_Samplers.Size = new System.Drawing.Size(796, 436);
@@ -145,17 +157,9 @@
             this.l_shaderPath.AutoSize = true;
             this.l_shaderPath.Location = new System.Drawing.Point(12, 91);
             this.l_shaderPath.Name = "l_shaderPath";
-            this.l_shaderPath.Size = new System.Drawing.Size(73, 15);
+            this.l_shaderPath.Size = new System.Drawing.Size(46, 15);
             this.l_shaderPath.TabIndex = 5;
-            this.l_shaderPath.Text = "Shader path:";
-            // 
-            // tb_ShaderPath
-            // 
-            this.tb_ShaderPath.Enabled = false;
-            this.tb_ShaderPath.Location = new System.Drawing.Point(91, 88);
-            this.tb_ShaderPath.Name = "tb_ShaderPath";
-            this.tb_ShaderPath.Size = new System.Drawing.Size(619, 23);
-            this.tb_ShaderPath.TabIndex = 6;
+            this.l_shaderPath.Text = "Shader:";
             // 
             // b_Save
             // 
@@ -170,7 +174,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileMenu});
+            this.fileMenu,
+            this.yeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(838, 24);
@@ -229,7 +234,7 @@
             // withDefaultFilenamelocationToolStripMenuItem
             // 
             this.withDefaultFilenamelocationToolStripMenuItem.Name = "withDefaultFilenamelocationToolStripMenuItem";
-            this.withDefaultFilenamelocationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.withDefaultFilenamelocationToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.withDefaultFilenamelocationToolStripMenuItem.Text = "at default location";
             this.withDefaultFilenamelocationToolStripMenuItem.Click += new System.EventHandler(this.withDefaultFilenamelocationToolStripMenuItem_Click);
             // 
@@ -237,8 +242,15 @@
             // 
             this.browseToolStripMenuItem.Enabled = false;
             this.browseToolStripMenuItem.Name = "browseToolStripMenuItem";
-            this.browseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.browseToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.browseToolStripMenuItem.Text = "browse...";
+            // 
+            // yeToolStripMenuItem
+            // 
+            this.yeToolStripMenuItem.Enabled = false;
+            this.yeToolStripMenuItem.Name = "yeToolStripMenuItem";
+            this.yeToolStripMenuItem.Size = new System.Drawing.Size(12, 20);
+            this.yeToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // progressBar1
             // 
@@ -249,11 +261,11 @@
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.Indigo;
-            this.label1.Location = new System.Drawing.Point(139, 30);
+            this.label1.Location = new System.Drawing.Point(139, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(571, 23);
+            this.label1.Size = new System.Drawing.Size(571, 32);
             this.label1.TabIndex = 10;
             this.label1.Text = "label1";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -268,16 +280,36 @@
             this.b_ResetMat.UseVisualStyleBackColor = true;
             this.b_ResetMat.Click += new System.EventHandler(this.b_ResetMat_Click);
             // 
+            // cb_Shaders
+            // 
+            this.cb_Shaders.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Shaders.FormattingEnabled = true;
+            this.cb_Shaders.Location = new System.Drawing.Point(64, 88);
+            this.cb_Shaders.Name = "cb_Shaders";
+            this.cb_Shaders.Size = new System.Drawing.Size(528, 23);
+            this.cb_Shaders.TabIndex = 12;
+            // 
+            // b_saveShader
+            // 
+            this.b_saveShader.Location = new System.Drawing.Point(598, 88);
+            this.b_saveShader.Name = "b_saveShader";
+            this.b_saveShader.Size = new System.Drawing.Size(112, 23);
+            this.b_saveShader.TabIndex = 13;
+            this.b_saveShader.Text = "Override Shader";
+            this.b_saveShader.UseVisualStyleBackColor = true;
+            this.b_saveShader.Click += new System.EventHandler(this.b_saveShader_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 590);
+            this.Controls.Add(this.b_saveShader);
+            this.Controls.Add(this.cb_Shaders);
             this.Controls.Add(this.b_ResetMat);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.b_Save);
-            this.Controls.Add(this.tb_ShaderPath);
             this.Controls.Add(this.l_shaderPath);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.cB_matCategory);
@@ -288,7 +320,7 @@
             this.MinimumSize = new System.Drawing.Size(854, 629);
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Form1";
+            this.Text = "fsmat";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dGV_Params)).EndInit();
@@ -311,7 +343,6 @@
         private TabPage tabPage2;
         private DataGridView dGV_Samplers;
         private Label l_shaderPath;
-        private TextBox tb_ShaderPath;
         private Button b_Save;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileMenu;
@@ -325,5 +356,8 @@
         private ToolStripMenuItem browseToolStripMenuItem;
         private ToolStripMenuItem fromDefaultLocationToolStripMenuItem;
         private ToolStripMenuItem browseToolStripMenuItem1;
+        private ToolStripMenuItem yeToolStripMenuItem;
+        private ComboBox cb_Shaders;
+        private Button b_saveShader;
     }
 }
