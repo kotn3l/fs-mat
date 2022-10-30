@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SoulsFormats.MATBIN;
@@ -33,8 +35,7 @@ namespace fs_mat
         {
             InitializeComponent();
             label1.Text = "";
-            yeToolStripMenuItem.Text = config.Default.lastMATBINFile;
-            if (config.Default.lastMATBINFile != "" || config.Default.lastMATBINFile != String.Empty || File.Exists(config.Default.lastMATBINFile))
+            if (config.Default.lastMATBINFile != "" && config.Default.lastMATBINFile != String.Empty && File.Exists(config.Default.lastMATBINFile))
             {
                 matbinFile = config.Default.lastMATBINFile;
                 preSetUp();
@@ -46,6 +47,7 @@ namespace fs_mat
         {
             try
             {
+                yeToolStripMenuItem.Text = config.Default.lastMATBINFile;
                 cb_Shaders.Items.Clear();
                 cB_matCategory.Items.Clear();
                 cB_allmat.Items.Clear();
@@ -72,6 +74,8 @@ namespace fs_mat
             {
                 MessageBox.Show($"An error occured while reading the file -- is the path correct?: {matbinFile}");
                 resetForm();
+                setControls(true);
+                b_Save.Enabled = false;
             }
 
         }
@@ -219,6 +223,7 @@ namespace fs_mat
                         break;
                 }
                 currentMat.Params[dGV_Params.CurrentCell.RowIndex] = test;
+                allmat.Files[currentMatIndex].Bytes = currentMat.Write();
             }
             catch (Exception)
             {
@@ -248,7 +253,10 @@ namespace fs_mat
                         multiParamName = test.Name;
                         selectedRowParam = dGV_Params.CurrentCell.RowIndex;
                         MultipleDataEditForm mdef = new MultipleDataEditForm();
-                        mdef.ShowDialog();
+                        if (mdef.ShowDialog() == DialogResult.OK)
+                        {
+                            allmat.Files[currentMatIndex].Bytes = currentMat.Write();
+                        }
                         break;
                 }
             }
@@ -283,18 +291,25 @@ namespace fs_mat
         }
         private async void b_Save_Click(object sender, EventArgs e)
         {
-            progressBar1.Maximum = 100;
-            progressBar1.Step = 10;
-            var progress = new Progress<int>(v =>
+            try
             {
-                progressBar1.Value = v;
-            });
-            setControls(false);
-            await Task.Run(() => SaveMaterial(progress));
-            setControls(true);
-            System.GC.Collect();
-            MessageBox.Show("Saved!");
-            progressBar1.Value = 0;
+                progressBar1.Maximum = 100;
+                progressBar1.Step = 10;
+                var progress = new Progress<int>(v =>
+                {
+                    progressBar1.Value = v;
+                });
+                setControls(false);
+                await Task.Run(() => SaveMaterial(progress));
+                setControls(true);
+                System.GC.Collect();
+                MessageBox.Show("Saved!");
+                progressBar1.Value = 0;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Something went wrong while saving");
+            }     
         }
         private void loadmatbinToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -335,6 +350,10 @@ namespace fs_mat
         }
         private void fromDefaultLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(matbinFile))
+            {
+                return;
+            }
             if (File.Exists(matbinFile + @".backup"))
             {
                 if (MessageBox.Show($"This will overwrite the allmaterial file with the default backup file. Continue?", "Restore backup", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -353,6 +372,10 @@ namespace fs_mat
         }
         private void withDefaultFilenamelocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(matbinFile))
+            {
+                return;
+            }
             if (File.Exists(matbinFile + @".backup"))
             {
                 if (MessageBox.Show($"This will overwrite the backup found at the default location. Continue?", "New backup", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -395,6 +418,9 @@ namespace fs_mat
             b_ResetMat.Enabled = enabled;
             b_saveShader.Enabled = enabled;
             fileMenu.Enabled = enabled;
+            b_Save.Enabled = enabled;
+            restoreFromBackupFileToolStripMenuItem.Enabled = enabled;
+            createBackupToolStripMenuItem.Enabled = enabled;
         }
         private void b_saveShader_Click(object sender, EventArgs e)
         {

@@ -206,6 +206,7 @@ namespace fs_mat
             this.restoreFromBackupFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fromDefaultLocationToolStripMenuItem,
             this.browseToolStripMenuItem1});
+            this.restoreFromBackupFileToolStripMenuItem.Enabled = false;
             this.restoreFromBackupFileToolStripMenuItem.Name = "restoreFromBackupFileToolStripMenuItem";
             this.restoreFromBackupFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.restoreFromBackupFileToolStripMenuItem.Text = "Restore backup";
@@ -229,6 +230,7 @@ namespace fs_mat
             this.createBackupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.withDefaultFilenamelocationToolStripMenuItem,
             this.browseToolStripMenuItem});
+            this.createBackupToolStripMenuItem.Enabled = false;
             this.createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
             this.createBackupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createBackupToolStripMenuItem.Text = "Create backup";
@@ -236,7 +238,7 @@ namespace fs_mat
             // withDefaultFilenamelocationToolStripMenuItem
             // 
             this.withDefaultFilenamelocationToolStripMenuItem.Name = "withDefaultFilenamelocationToolStripMenuItem";
-            this.withDefaultFilenamelocationToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.withDefaultFilenamelocationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.withDefaultFilenamelocationToolStripMenuItem.Text = "at default location";
             this.withDefaultFilenamelocationToolStripMenuItem.Click += new System.EventHandler(this.withDefaultFilenamelocationToolStripMenuItem_Click);
             // 
@@ -244,7 +246,7 @@ namespace fs_mat
             // 
             this.browseToolStripMenuItem.Enabled = false;
             this.browseToolStripMenuItem.Name = "browseToolStripMenuItem";
-            this.browseToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.browseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.browseToolStripMenuItem.Text = "browse...";
             // 
             // yeToolStripMenuItem
